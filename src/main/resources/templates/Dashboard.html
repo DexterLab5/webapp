@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <!--    You run npm run build you package Java-->
+</head>
+<body class="p-8 bg-base-200 min-h-screen">
+
+
+
+<!--    Table-->
+<div class="max-w-6xl mx-auto p-4">
+
+    <div class="flex justify-between">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">Dashboard</h1>
+        <div>
+            <a th:href="@{/webapp/logout}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Logout</a>
+        </div>
+    </div>
+
+    <a th:href="@{/webapp/send-mail}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Send mail</a>
+    <div class="w-full overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm mt-8">
+
+
+
+        <table class="w-full table-auto border-collapse text-left text-sm text-slate-600">
+            <thead class="bg-slate-50 text-xs font-semibold uppercase text-slate-700 border-b border-slate-200">
+            <tr>
+                <th class="px-6 py-4">User</th>
+                <th class="px-6 py-4">Role</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4">Joined Date</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+            <!-- Row Example -->
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="flex items-center gap-3 px-6 py-4">
+                    <img class="h-10 w-10 rounded-full" th:src="@{/img/Default_pfp.jpg}" alt="User"/>
+                    <div>
+                        <div class="text-base font-semibold text-slate-900">Name</div>
+                        <div class="text-xs text-slate-400">email@example.com</div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-slate-900">Role</td>
+                <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
+                          <span class="h-1.5 w-1.5 rounded-full bg-green-600"></span> Status
+                        </span>
+                </td>
+                <td class="px-6 py-4 font-normal text-slate-500">Date</td>
+                <td class="px-6 py-4 text-right">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                </td>
+            </tr>
+
+            <tr th:each="user : ${users}" class="hover:bg-slate-50 transition-colors">
+                <td class="flex items-center gap-3 px-6 py-4">
+                    <img class="h-10 w-10 rounded-full" th:src="@{/img/Default_pfp.jpg}" alt="User"/>
+                    <div>
+                        <div class="text-base font-semibold text-slate-900" th:text="${user.name}">Name</div>
+                        <div class="text-xs text-slate-400" th:text="${user.email}">email@example.com</div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-slate-900" th:text="${user.role}">Role</td>
+                <td class="px-6 py-4 text-slate-900">
+                    <span th:if="${user.status == 'active'}"
+                          class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
+                          <span class="h-1.5 w-1.5 rounded-full bg-green-600"></span> Active
+                    </span>
+                    <span th:if="${user.status == 'not active'}"
+                          class="inline-flex items-center gap-1 rounded-full bg-blue-500 px-2.5 py-1 text-xs font-semibold text-white">Not active</span>
+
+                </td>
+                <td class="px-6 py-4 font-normal text-slate-500" th:text="${user.joinedDate}">Date</td>
+                <td class="px-6 py-4 text-right flex gap-3 justify-end">
+
+                    <a th:if="${auth.role == 'admin' || auth.role == 'mod'}" th:href="@{/webapp/edit-user/{email}(email=${user.email})}" th:method="put"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Edit</a>
+
+                    <form th:if="${auth.role == 'admin'}" th:action="@{/webapp/delete-user/{email}(email=${user.email})}" th:method="delete">
+                        <button  th:type="submit"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                    </form>
+
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="max-w-6xl mx-auto p-4">
+    <p class="text-transparent">asdasdas</p>
+    <button id="add-user-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add user</button>
+    <p class="text-transparent">asdasd</p>
+</div>
+
+<!-- Контейнер на формата -->
+<div id="user-form" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200 hidden">
+    <h2 class="text-xl font-bold text-gray-800 mb-6">New User</h2>
+
+    <form id="userForm" th:action="@{/webapp/register-request}" th:object="${user}" method="POST">
+        <!-- Поле за Име -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input type="text" placeholder="name ex" th:field="*{name}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- Поле за Имейл -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" placeholder="ivan@email.com" th:field="*{email}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" placeholder="*********" th:field="*{password}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <input type="text" placeholder="moderator" th:field="*{role}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label>
+                <input type="radio" name="status" value="active" checked th:field="*{status}">
+                Active
+            </label>
+
+            <label>
+                <input type="radio" name="status" value="not-active" th:field="*{status}">
+                Not active
+            </label>
+        </div>
+
+
+        <!-- Бутон за Запис -->
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition">
+            Add
+        </button>
+    </form>
+</div>
+
+
+
+</body>
+
+<!-- 3. JavaScript кодът -->
+<script>
+    document.getElementById('add-user-btn').addEventListener('click', function() {
+        var form = document.getElementById('user-form');
+        form.classList.remove("hidden");
+    });
+
+
+    document.getElementById('userForm').addEventListener('click', function () {
+
+    })
+</script>
+
+</html>

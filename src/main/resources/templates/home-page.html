@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-8">Welcome</h1>
+        <div class="space-y-4">
+            <a th:href="@{/webapp/login}"
+               class="inline-block w-full max-w-xs px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Login
+            </a>
+            <a th:href="@{/webapp/register}"
+               class="inline-block w-full max-w-xs px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700">
+                Register
+            </a>
+        </div>
+    </div>
+</body>
+</html>

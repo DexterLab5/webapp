@@ -1,0 +1,3 @@
+Jan|jan@email.com|1234|role|active|12 may 2013
+Jan2|jan2@email.com|1234|role|active|12 may 2014
+Jan3|jan3@email.com|1234|role|not active|12 may 2015
