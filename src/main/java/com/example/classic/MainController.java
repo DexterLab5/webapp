@@ -133,7 +133,7 @@ public class MainController {
         newUser = new User(registerRequest.name, registerRequest.email, passwordEncoder.encode(registerRequest.password), registerRequest.role,
                 registerRequest.status, "");
 
-        sendVerificationEmail();
+        sendVerificationEmail();               // .... Hoxton mailSender is jammed
 
         return "register-ok";
     }
